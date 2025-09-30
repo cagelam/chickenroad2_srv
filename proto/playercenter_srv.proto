@@ -1,0 +1,334 @@
+syntax = "proto3";
+
+package pb_playercenter;
+
+option go_package = "./pb_playercenter";
+
+import "google/protobuf/any.proto";
+import "common.proto";
+
+// ------------------------------------------------------------------------
+// Login
+
+message Req_Login {
+  int32 GameId = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Res_Login {
+  string Token = 1;
+}
+
+// ------------------------------------------------------------------------
+// GetSessionID
+
+message Req_GetSessionId {
+  string Token = 1;
+}
+
+message Res_GetSessionId {
+  string SessionId = 1;
+}
+
+// ------------------------------------------------------------------------
+// Account
+
+message Req_Account {
+  string Account = 1;
+}
+
+message Res_SetAccount {
+  bool Ok = 1;
+}
+message Res_AccountStatus {
+  bool IsBan = 1;
+}
+
+message Req_IsExisted {
+  string AuthToken = 1;
+}
+
+message Res_IsExisted {
+  bool Existed = 1;
+}
+
+// ------------------------------------------------------------------------
+
+message Req_GetRole {
+  string AuthToken  = 1;
+  int32 GameId      = 2;
+}
+
+message Res_GetSeed {
+  string Seed = 1;
+}
+
+message Res_GetOperatorRole {
+  pb_common.MOperatorRole OperatorRole = 1;
+}
+
+message Res_SetRole {
+  bool Ok = 1;
+}
+
+// ------------------------------------------------------------------------
+// Doggy
+
+message Res_GetDoggyRole {
+  pb_common.MDoggyRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetDoggyRole {
+  string AuthToken = 1;
+  pb_common.MDoggyRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Money Train
+
+message Res_GetMoneytrainRole {
+  pb_common.MoneytrainRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetMoneytrainRole {
+  string AuthToken = 1;
+  pb_common.MoneytrainRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Dragon Slayer
+
+message Res_GetDragonSlayerRole {
+  pb_common.MDragonSlayerRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetDragonSlayerRole {
+  string AuthToken = 1;
+  pb_common.MDragonSlayerRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Wanted
+
+message Res_GetWantedRole{
+  pb_common.WantedRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetWantedRole{
+  string AuthToken = 1;
+  pb_common.WantedRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// MagicalMine
+
+message Res_GetMagicalMineRole{
+  pb_common.MagicalMineRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetMagicalMineRole{
+  string AuthToken = 1;
+  pb_common.MagicalMineRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// BigBass
+
+message Res_GetBigBassRole{
+  pb_common.BigBassRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetBigBassRole{
+  string AuthToken = 1;
+  pb_common.BigBassRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// JacksCrypt
+
+message Res_GetJacksCryptRole{
+  pb_common.JacksCryptRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetJacksCryptRole{
+  string AuthToken = 1;
+  pb_common.JacksCryptRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// HandOfAnubis
+
+message Res_GetHandOfAnubisRole {
+    pb_common.HandOfAnubisRole Role = 1;
+    pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetHandOfAnubisRole {
+    string AuthToken = 1;
+  pb_common.HandOfAnubisRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Dragon Quest
+
+message Res_GetDragonRole {
+    pb_common.DragonRole Role = 1;
+    pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message  Req_SetDragonRole {
+  string AuthToken = 1;
+  pb_common.DragonRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// John Wild
+
+message Res_GetJohnWildRole {
+  pb_common.JohnWildRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetJohnWildRole {
+    string AuthToken = 1;
+    pb_common.JohnWildRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Rip City
+
+message Res_GetRipCityRole {
+  pb_common.RipCityRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetRipCityRole {
+  string AuthToken = 1;
+  pb_common.RipCityRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Warrior Ways
+
+message Res_GetWarriorWaysRole {
+  pb_common.WarriorWaysRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetWarriorWaysRole {
+  string AuthToken = 1;
+  pb_common.WarriorWaysRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+message Res_GetRole {
+  google.protobuf.Any Role              = 1;
+  pb_common.MOperatorRole OperatorRole  = 2;
+  string RoleId                         = 3;
+  int32 GameId                          = 4;
+}
+
+message Req_SetRole {
+  google.protobuf.Any Role= 1;
+  string AuthToken        = 2;
+  int32 GameId            = 3;
+}
+
+// ------------------------------------------------------------------------
+message Res_GetIteroRole {
+  pb_common.IteroRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetIteroRole {
+  string AuthToken = 1;
+  pb_common.IteroRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+// Alive
+message Req_Alive {
+  string Token = 1;
+}
+message Res_Alive { }
+
+// ------------------------------------------------------------------------
+// Jelly
+
+message Res_GetJellyRole {
+  pb_common.JellyRole Role = 1;
+  pb_common.MOperatorRole OperatorRole = 2;
+}
+
+message Req_SetJellyRole {
+  string AuthToken = 1;
+  pb_common.JellyRole Role = 2;
+}
+
+// ------------------------------------------------------------------------
+
+service PlayerCenterSrv {
+  rpc Login(Req_Login) returns (Res_Login) {}
+  rpc GetSessionId(Req_GetSessionId) returns (Res_GetSessionId) {}
+  rpc Alive(Req_Alive) returns (Res_Alive) {}
+  rpc NewAccount(Req_Account) returns (Res_SetAccount) {}
+  rpc Eliminate(Req_Account) returns (Res_SetAccount) {}
+  rpc Ban(Req_Account) returns (Res_SetAccount) {}
+  rpc Unseal(Req_Account) returns (Res_SetAccount) {}
+  rpc Status(Req_Account) returns (Res_AccountStatus) {}
+
+  rpc IsExisted(Req_IsExisted) returns (Res_IsExisted) {}
+
+  rpc GetOperatorRole(Req_GetRole) returns (Res_GetOperatorRole) {}
+
+  rpc GetDoggyRole(Req_GetRole) returns (Res_GetDoggyRole) {}
+  rpc SetDoggyRole(Req_SetDoggyRole) returns (Res_SetRole) {}
+
+  rpc GetServerSeed(Req_GetRole) returns (Res_GetSeed) {}
+
+  rpc GetMoneytrainRole(Req_GetRole) returns (Res_GetMoneytrainRole) {}
+  rpc SetMoneytrainRole(Req_SetMoneytrainRole) returns (Res_SetRole) {}
+
+  rpc GetDragonSlayerRole(Req_GetRole) returns (Res_GetDragonSlayerRole) {}
+  rpc SetDragonSlayerRole(Req_SetDragonSlayerRole) returns (Res_SetRole) {}
+
+  rpc GetWantedRole(Req_GetRole) returns (Res_GetWantedRole) {}
+  rpc SetWantedRole(Req_SetWantedRole) returns (Res_SetRole) {}
+
+  rpc GetMagicalMineRole(Req_GetRole) returns (Res_GetMagicalMineRole) {}
+  rpc SetMagicalMineRole(Req_SetMagicalMineRole) returns (Res_SetRole) {}
+
+  rpc GetJacksCryptRole(Req_GetRole) returns (Res_GetJacksCryptRole) {}
+  rpc SetJacksCryptRole(Req_SetJacksCryptRole) returns (Res_SetRole) {}
+
+  rpc GetBigBassRole(Req_GetRole) returns (Res_GetBigBassRole) {}
+  rpc SetBigBassRole(Req_SetBigBassRole) returns (Res_SetRole) {}
+
+  rpc GetHandOfAnubisRole(Req_GetRole) returns (Res_GetHandOfAnubisRole) {}
+  rpc SetHandOfAnubisRole(Req_SetHandOfAnubisRole) returns (Res_SetRole) {}
+
+  rpc GetDragonRole(Req_GetRole) returns (Res_GetDragonRole) {}
+  rpc SetDragonRole(Req_SetDragonRole) returns (Res_SetRole) {}
+
+  rpc GetJohnWildRole(Req_GetRole) returns (Res_GetJohnWildRole) {}
+  rpc SetJohnWildRole(Req_SetJohnWildRole) returns (Res_SetRole) {}
+
+  rpc GetRipCityRole(Req_GetRole) returns (Res_GetRipCityRole) {}
+  rpc SetRipCityRole(Req_SetRipCityRole) returns (Res_SetRole) {}
+
+  rpc GetWarriorWaysRole(Req_GetRole) returns (Res_GetWarriorWaysRole) {}
+  rpc SetWarriorWaysRole(Req_SetWarriorWaysRole) returns (Res_SetRole) {}
+
+  rpc GetJellyRole(Req_GetRole) returns (Res_GetJellyRole) {}
+  rpc SetJellyRole(Req_SetJellyRole) returns (Res_SetRole) {}
+
+  rpc GetRole(Req_GetRole) returns (Res_GetRole) {}
+  rpc SetRole(Req_SetRole) returns (Res_SetRole) {}
+}

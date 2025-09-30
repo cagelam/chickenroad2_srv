@@ -1,0 +1,202 @@
+syntax = "proto3";
+package pb_operatorproxy;
+option go_package = "./pb_operatorproxy";
+import "common.proto";
+
+// ------------------------------------------------------------------------
+
+message Res_Ok {
+  bool Ok = 1;
+}
+
+// ------------------------------------------------------------------------
+
+// 请求-验证会话
+message Req_VerifySession {
+  int32  Gt = 1;                      // 游戏类型1真机，2模拟
+  int32  GameId = 2;                  // 游戏编号
+  string OperatorPlayerToken = 3;     // 运营商用户token
+  string OperatorToken = 4;           // 运营商token
+  string OperatorParam = 5;           // 运营商自定义参数
+  string Ip = 6;                      // 玩家IP
+  string SessionId = 7;               // 运营商上次返回的session
+}
+
+// 应答-验证会话
+message Res_VerifySession {
+  int32  Gt = 1;                     // 游戏类型1真机，2模拟
+  int32  GameId = 2;                 // 游戏编号
+  string ReminderTime = 3;           // 提醒时间
+  pb_common.MOperatorRole OperatorRole = 4;
+}
+
+message Req_CashGet {
+  pb_common.MOperatorRole OperatorRole = 1;
+}
+
+message Res_CashGet {
+  double BalanceAmount = 1; // 货币余额
+  string CurrencyCode  = 2; // 货种代码
+  int64  CurrencyMult  = 3; // 货种乘数
+}
+
+message Req_CashAdd {
+  pb_common.MOperatorRole OperatorRole = 1;
+  int32   GameId = 2;
+  int64   BetId = 3;
+  int64   SubId = 4;
+  double  BetLevel = 5;
+  double  Amount = 6;
+  int64   CreateTime = 7;
+  bool    IsEndRound = 8;         //本局游戏结束
+  bool    IsFSActivity = 9;       // 免费旋转活动
+  int64   FreeSpinId = 10;        //平台赠送freespin ID
+  int32   FreeSpinCount = 11;     //剩余平台赠送次数
+}
+
+message Res_CashAdd {
+  double BalanceAmount = 1; // 货币余额
+  string ReceiptId     = 2; // 运营商流水号
+  string ExchangeRate  = 3; // 当前汇率
+}
+
+message Req_CashSub {
+  pb_common.MOperatorRole OperatorRole = 1;
+  int32   GameId = 2;
+  int64   BetId = 3;
+  int64   SubId = 4;
+  double  BetLevel = 5;
+  double  Amount = 6;
+  int64   CreateTime = 7;
+  bool    IsFSActivity = 8;    // 免费旋转活动
+  double  FSActivityAmount = 9; // 免费旋转活动中本应扣除的金额
+  int64   FreeSpinId = 10;        //平台赠送freespin ID
+  int32   FreeSpinCount = 11;     //剩余平台赠送次数
+}
+
+message Res_CashSub {
+  double BalanceAmount = 1; // 货币余额
+  string ReceiptId     = 2; // 运营商流水号
+  string ExchangeRate  = 3; // 当前汇率
+}
+
+message Req_CashAdjustment {
+  pb_common.MOperatorRole OperatorRole = 1;
+  double TransferAmount = 2;
+  int32  GameId = 3;
+  int64  ParentId = 4;
+  int64  BetId = 5;
+  int64  CreateTime = 6;
+}
+
+message Res_CashAdjustment {
+  double BalanceAmount = 1; // 货币余额
+  string ReceiptId     = 2; // 运营商流水号
+}
+
+// ------------------------------------------------------------------------
+
+message Req_VerifyOperator {
+  string OperatorToken = 1;
+}
+
+message Res_VerifyOperator {
+  bool Ok             = 1;
+}
+
+// ------------------------------------------------------------------------
+
+message Req_BetLevels {
+  int32 GameCode      = 1;  // The game ID
+  string CurrencyCode = 2;  // Currency Code(optional)
+}
+
+message Res_BetLevels {
+  repeated pb_common.BetLevels BetLevels = 1; // Bet Levels
+  int32 GameCode = 2; 
+}
+
+
+
+message Req_CurrencyLevel {
+  string OperatorToken = 1;
+  string OperatorCurrencyCode = 2;
+}
+
+message Res_CurrencyLevel {
+  bool Ok = 1;                          
+  double DefaultBet             = 2;
+  repeated double BetLevel      = 3;
+  double TempExchangeRate = 4;
+}
+
+// ------------------------------------------------------------------------
+
+message Req_Test {
+  string OperatorUrl          = 1; 
+  string OperatorPlayerToken  = 2;
+  string SecretKey            = 3;
+  pb_common.MOperatorRole role= 4;  // Get from VerifySession
+  int32  GameId               = 5;
+  int64  BetId                = 6;
+  int64  SubId                = 7;
+  double BetLevel             = 8;
+  double Amount               = 9;
+  int64  CreateTime           = 10;
+  bool   IsEndRound           = 11;
+  string OperatorToken        = 12;
+}
+
+message Res_Test {
+  pb_common.MOperatorRole  role = 1;
+  double BalanceAmount          = 2;
+  string CurrencyCode           = 3;
+  string ReceiptId              = 4;
+  string Result                 = 5;
+  int64  Ts                     = 6;
+}
+
+// ------------------------------------------------------------------------
+
+message Req_GetOperatorKey {
+  string OperatorToken = 1;
+}
+
+message Res_GetOperatorKey {
+  string Key = 1;
+}
+// ------------------------------------------------------------------------
+
+// operator proxy
+service OperatorProxySrv {
+  //验证会话
+  rpc VerifySession(Req_VerifySession) returns (Res_VerifySession) {}
+  //得到钱包
+  rpc CashGet(Req_CashGet) returns (Res_CashGet) {}
+  //加钱
+  rpc CashAdd(Req_CashAdd) returns (Res_CashAdd) {}
+  //扣钱
+  rpc CashSub(Req_CashSub) returns (Res_CashSub) {}
+  //金币调整
+  rpc CashAdjustment(Req_CashAdjustment) returns (Res_CashAdjustment) {}
+  //验证运营商
+  rpc VerifyOperator(Req_VerifyOperator) returns (Res_VerifyOperator) {}
+  //获取运营商秘钥
+  rpc GetOperatorKey(Req_GetOperatorKey) returns (Res_GetOperatorKey) {}
+  //请求CurrencyLevel
+  rpc CurrencyLevel(Req_CurrencyLevel) returns (Res_CurrencyLevel) {}
+
+  // ------------------------------------------------------------------------
+  //test:验证会话
+  rpc TestVerifySession(Req_Test) returns (Res_Test) {}
+  //test:得到钱包
+  rpc TestCashGet(Req_Test) returns (Res_Test) {}
+  //test:加钱
+  rpc TestCashAdd(Req_Test) returns (Res_Test) {}
+  //test:扣钱
+  rpc TestCashSub(Req_Test) returns (Res_Test) {}
+  //test:BadAction
+  rpc TestBadAction(Req_Test) returns (Res_Test) {}
+  //test:Echo
+  rpc TestEcho(Req_Test) returns (Res_Test) {}
+}

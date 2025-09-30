@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package conn_srv;
+
+option go_package = "./pb_conn_srv";
+
+// 单播请求：给一个用户发送一条业务事件
+message UnicastRequest {
+  // 业务侧用户唯一标识（如用户ID、账号ID）
+  string user_id = 1;
+
+  // 事件名，便于前后端约定解析
+  string event = 2;
+
+  // 二进制载荷；如使用JSON，可直接放入序列化后的字节
+  bytes payload = 3;
+
+
+  // 业务侧可选扩展信息（例如路由key、版本、平台等）
+  map<string, string> metadata = 4;
+
+  //消息体类型, 0=使用平台的传输，1=表示直接payload下发
+  int32 send_type = 5;
+
+  //房间id
+  string room_id = 6;
+
+  // 发送时间，单位为毫秒
+  int64 send_time = 7;
+
+  // 用来做去重处理。以免重复发送消息的
+  string request_id = 15;
+}
+
+// 广播请求：按不同目标集合广播一条业务事件
+message BroadcastRequest {
+  // 事件名
+  string event = 1;
+
+  // 载荷
+  bytes payload = 2;
+
+  // 扩展信息
+  map<string, string> metadata = 3;
+
+  //房间id
+  string room_id = 4;
+
+  //消息体类型, 0=使用平台的传输，1=表示直接payload下发
+  int32 send_type = 5;
+
+  //发送时间，单位为毫秒
+  int64 send_time = 6;
+
+  // 可选的链路追踪ID
+  string request_id = 20;
+}
+
+// 发送响应：回执与命中统计
+message UnicastResponse {
+  // 回执ID（由网关侧生成），用于排障追踪
+  string message_id = 1;
+}
+
+
+// 发送响应：回执与命中统计
+message BroadcastResponse {
+  // 回执ID（由网关侧生成），用于排障追踪
+  string message_id = 1;
+}
+
+
+// 连接/消息服务接口
+service ConnGwService {
+  // 单播：向某个用户发送一条消息
+  rpc Unicast (UnicastRequest) returns (UnicastResponse);
+
+  // 广播：向一组目标（所有/用户列表/房间/标签）发送消息
+  rpc Broadcast (BroadcastRequest) returns (BroadcastResponse);
+}

@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package pb_chickenroad2;
+option go_package = "./pb_chickenroad2";
+
+
+
+message ChickenRoad2_Auth {
+  string Operator = 1;
+  string AuthToken = 2;
+  string Currency = 3;
+  string Ip = 4;
+}
+
+message ChickenRoad2_AuthResp {
+  string  Token = 1;
+}
+
+message Empty {
+
+}
+
+message GameConfig {
+    Coefficients coefficients = 1;
+    LastWin lastWin = 2 ;
+}
+
+message Coefficients {
+  repeated string EASY = 1;
+  repeated string MEDIUM = 2;
+  repeated string HARD = 3;
+  repeated string DAREDEVIL = 4;
+}
+
+message LastWin {
+  string username = 1;
+  string avatar = 2;
+  string countryCode = 3;
+  string winAmount = 4;
+  string currency = 5;
+}
+
+message Action {
+  string action = 1;
+  ActionPayload payload = 2;
+}
+
+message ActionPayload {
+  string betAmount = 1;
+  string currency = 2;
+  string difficulty = 3;
+  string countryCode = 4;
+  int32 lineNumber = 5;
+}
+
+message GameStep {
+  bool isFinished = 1;
+  string currency = 2;
+  string betAmount = 3;
+  string coeff = 4;
+ string winAmount = 5;
+ string difficulty = 6;
+ int32 lineNumber = 7;
+ repeated int32 collisionPositions = 8;
+ bool isWin = 9;
+}
+
+message Record {
+  string id = 1;
+  string createdAt = 2;
+  int32 gameId = 3;
+  double finishCoeff = 4;
+  Fairness fairness = 5;
+  double betAmount = 6;
+  double win = 7;
+  double withdrawCoeff = 8;
+  string operatorId = 9;
+  string userId = 10;
+  string currency = 11;
+    GameMeta gameMeta = 12;
+}
+
+message Fairness {
+  string decimal = 1;
+  string clientSeed = 2;
+  string serverSeed = 3;
+  string combinedHash = 4;
+  string hashedServerSeed = 5;
+}
+
+message GameMeta {
+  string coeff = 1;
+  string difficulty = 2;
+}
+
+message ChickenRoad2Role {
+  int64              ParentId           = 1;
+  int64              SubId              = 2;
+  bool               IsFinished         = 3;
+  bool               IsWin              = 4;
+  string             Currency           = 5;
+  double             BetAmount          = 6;
+  double             Coefficients       = 7;
+  double             WinAmount          = 8;
+  string             Difficulty         = 9;
+  int32              LineNumber         = 10;
+  repeated int32     CollisionPositions = 11;
+  string             ClientSeed         = 12;
+  string             ServerSeed         = 13;
+  string             RoleId             = 14;
+}
+
+// 单播请求：给一个用户发送一条业务事件
+message ReceiveRequest {
+  // 业务侧用户唯一标识（如用户ID、账号ID）
+  UserInfo user_info = 1;
+
+  // 事件名，便于前后端约定解析
+  string event = 2;
+
+  // 二进制载荷；如使用JSON，可直接放入序列化后的字节
+  bytes payload = 3;
+
+  //游戏id
+  int32 game_id = 4;
+
+  //房间id
+  string room_id = 5;
+
+  // 业务侧可选扩展信息（例如路由key、版本、平台等）
+  map<string, string> metadata = 6;
+
+}
+
+
+message UserInfo {
+  string userId = 1;
+  string token = 2;
+}
+
+
+service ChickenRoad2_srv {
+    rpc Auth(ChickenRoad2_Auth) returns (ChickenRoad2_AuthResp) {}
+    rpc Receive(ReceiveRequest) returns (Empty);
+}

@@ -1,0 +1,51 @@
+Name: chickenroad2srv.rpc
+ListenOn: 127.0.0.1:9300
+Mode: dev
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: chickenroad2srv.rpc
+
+JwtAuth:
+  AccessSecret: 5b381bfc-6e6f-4095-a7a6-561ee6391fa2
+  AccessExpire: 86400
+
+GWSrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: conngw.rpc
+OperatorProxySrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: operatorproxysrv.rpc
+OrderSrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: ordersrv.rpc
+CompensateSrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: compensatesrv.rpc
+LoginSrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: loginsrv.rpc
+PlayerCenterSrvConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: playercentersrv.rpc
+OrderDqConf:
+  Beanstalks:
+    - Endpoint: 127.0.0.1:11300
+      Tube: tube_write_order_history
+    - Endpoint: 127.0.0.1:11301
+      Tube: tube_write_order_history
+  Redis:
+    Host: 127.0.0.1:6379
+    Type: node

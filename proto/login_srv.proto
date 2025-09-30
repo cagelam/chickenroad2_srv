@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package pb_login;
+
+option go_package = "./pb_login";
+
+message Req_Login {
+  int32   	Gt = 1; // deprecaded
+  int32   	GameId = 2;                  // 游戏id
+  string    OperatorPlayerToken = 3;     // 运营商用户token
+  string    OperatorToken = 4;           // 运营商token
+  string    OperatorParam = 5;           // 运营商自定义参数
+  string    Ip = 6;                      // 玩家IP
+  //pb_common.MOperatorRole OperatorRole = 3;
+}
+
+message Res_Login {
+  string Token = 1;
+}
+
+message Req_Alive {
+  string Token  = 1;
+  int32 GameId  = 2;
+}
+
+message Res_Alive {
+  string ServerTime = 1;
+}
+
+service LoginSrv {
+  rpc Login(Req_Login) returns (Res_Login) {}
+  rpc Alive(Req_Alive) returns (Res_Alive) {}
+}

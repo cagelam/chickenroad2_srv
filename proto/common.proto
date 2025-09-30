@@ -1,0 +1,1252 @@
+syntax = "proto3";
+
+package pb_common;
+option go_package = "cocogame-max/chickenroad2_srv/proto/pb_common";
+
+
+// ------------------------------------------------------------------------
+// WinLine
+
+message WinLine {
+  int32 LineId        = 1;  // line id
+  int32 ElementNum    = 2;  // Deprecaded: use `Num` instead
+  int32 Element       = 3;  // Deprecaded: use `Symbol` instead
+  double Score        = 5;  // Score
+  int32 Multiple      = 6;  // Multiple, if multiple more than 1, this final line win = Score x Multiple
+  repeated int32 Mesh = 7;  // Index list
+  int32 Symbol        = 8;  // The symbol win
+  int32 Num           = 9;  // Number for symbol win
+}
+
+message Jackpot {
+  int32 Type = 1;  //奖池类型
+  double Score = 2;  //奖池
+}
+
+// 中将位置
+message WinType {
+  int32 Type = 1; //类型
+  int32 WildTimes = 2; //wild倍数
+  int32 Num = 3; //数量
+  double Score = 4;
+  repeated int32 Mesh = 5;
+  int32 LineType = 6;
+}
+
+// General data model for 'VS'
+message VS {
+  int32 Index = 1;        // index of vs symbol
+  int32 Symbol = 2;       // vs symbol
+  int32 Index1 = 3;       // 1st index
+  int32 Multiplier1 = 5;  // 1st multiplier
+  int32 Index2 = 4;       // 2nd index
+  int32 Multiplier2 = 6;  // 2nd multiplier
+  int32 WinIndex = 7;     // win index
+  int32 WinMultiplier = 8;// win multiplier
+  repeated int32 ReplacedMesh = 9; // the mesh to be replaced
+  int32 TargetSymbol = 10;// target symbol to replace
+}
+
+// General data of game role
+message CommonRole {
+  string      RoleId        = 1;  // Role id
+  int64       ParentId      = 2;  // Bet id
+  int64       SubId         = 3;  // Sub id of bet
+  double      Bet           = 4;  // Bet Level
+  double      Score         = 5;  // The final settlement score
+  repeated int32 Mesh       = 6;  // List of symbols
+  int32       GameState     = 7;  // Game state
+  repeated WinLine WinLines = 8;  // Win lines
+  double      Multiple      = 9; // Win multiple
+  double      TotalScore    = 10;  // Total win score
+  int32       FSNum         = 11; // Number of free spin
+  int32       FSTotalNum    = 12; // Total number of free spin
+  double      FSTotalScore  = 13; // total win score of free game
+  int32       RSNum         = 14; // Number of respin, when more than 0 will trigger respin
+  bool        Cascade       = 15; // Cascade flag
+}
+
+// Multiplier
+message Multiplier {
+  int32 Index                 = 1; // Index in mesh
+  int32 Symbol                = 2; // Multiplier symbol
+  int32 Multiple              = 3; // Multiple 
+}
+
+// ------------------------------------------------------------------------
+
+message BetLevels {
+  repeated
+      double Data = 1;          //
+  string CurrencyCode  = 2; // Currency Code
+  double InitBet  = 3;      // 
+}
+
+// ------------------------------------------------------------------------
+// 运营商角色不入库
+message MOperatorRole {
+  string  OperatorPlayerId = 1;       // 运营商用户id
+  string  OperatorToken = 2;          // 运营商token
+  string  OperatorPlayerToken = 3;    // 运营商用户token
+  string  OperatorCbLink = 4;         // 运营商回调地址
+  string  OperatorCurrencyCode = 5;   // 运营商用户货币代码
+  string  OperatorNickName = 6;       // 运营商用户昵称
+  string  OperatorSessionId = 7;      // 运营商会话id
+  string  SecretKey = 8;              // 安全互通密钥
+  int64   OperatorCurrencyMult = 9;   // 货种乘数
+}
+
+// ------------------------------------------------------------------------
+//补充棋子
+message SuppleChess{
+  int32 MeshIndex = 1; //棋牌位置
+  int32 Element = 2; //元素
+}
+
+// ------------------------------------------------------------------------
+// Doggy
+
+message BetToList {
+  double Bet = 1; //棋牌位置
+  repeated int32 Element = 2; //元素
+}
+
+message MDoggyRole {
+  string RoleId = 1;
+  int64 ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  repeated int32 WinMesh = 7;//中奖元素位置
+  int32 Status = 8;//状态
+  int32 FSNum = 9;//免费游戏剩余次数
+  int32 TotalFSNum = 10;//总共的freespintimes
+  double TotalFreeSpinScore = 11; //free spin 总赢分
+  repeated int32 FSChessList = 12; //free spin 累计元素
+  int32 FSChess = 13; //待命中元素
+  int32 Multiple = 14 ; //倍数
+  repeated int32 Coverage = 15; //fs翻倍范围
+  repeated SuppleChess SuppleMesh = 16; //补充棋盘数据
+  double BeforeScore = 17;
+  repeated int32 BoomMesh = 18; //爆炸棋盘
+  int32 IsShow = 19;
+  repeated BetToList BetChessMesh = 20; //补充棋盘数据
+}
+
+// ------------------------------------------------------------------------
+// MoneyTrain
+
+message Bonus {
+  int32 Type = 1; //类型
+  double OldMultiple = 2; //倍数
+  double Multiple = 3; //最新倍数
+  int32 Pos = 4; //位置
+  repeated int32 Effects = 5;//影响的元素
+}
+message MoneytrainRole {
+  string RoleId = 1;
+  int64 ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double  Multiple = 5;
+  double  RSTotalMultiple = 6;
+  double Bet = 7;
+  repeated int32 Mesh = 8;
+  repeated WinLine WinLines = 9;
+  int32 Status = 10;
+
+  int32 FSNum = 11;
+  repeated int32 FSNumHis = 12;
+  int32 FSResetNum = 13;
+
+  double  FSTotalMultiple = 14;
+  int32  FSColNum = 15;
+
+  // bonus图标，key对应位置，方便查找，bonus对应详细信息
+  map<int32, Bonus>  BonusInfo = 16;
+  map<int32, Bonus>  NewBonusInfo = 17;
+  map<int32, Bonus>  PresistentBonusInfo = 18;
+
+  repeated  Bonus NecromancyEffects = 19;
+}
+
+
+// ------------------------------------------------------------------------
+// DragonSlayer
+
+message VsChess{
+  int32 Index = 1;
+  int32 ColIndex = 2;
+  int32 DragonMul = 3;
+  int32 SlayerMul = 4;
+  int32 WinMul = 5;
+}
+
+message MDragonSlayerRole{
+  string RoleId = 1;
+  int64  ParentId = 2;
+  int64  SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  double  Multiple = 6;
+  repeated int32 Mesh = 7;
+  repeated WinLine WinLines = 8;
+  int32 Status = 9;
+
+  int32 FSNum = 10;
+  int32  TotalFSNum = 11;
+  double FSTotalScore = 12;
+  int32 AddWildNum = 13;
+  int32 AddMultiple = 14;
+  int32 FSType = 15;
+
+  repeated int32 WildMesh = 16;
+  map<int32, VsChess>  VSList = 17;
+  double FSWinScore = 18;
+}
+
+// ------------------------------------------------------------------------
+// Wanted
+
+message WantedVS{
+  int32 Multiple1 = 1;
+  int32 Multiple2 = 2;
+  int32 WinMultiple = 3;
+  int32 MeshIndex = 4;
+}
+
+message WantedRole {
+  string RoleId = 1;
+  int64  ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  int32 GameState = 7;
+  repeated WinType WinTypes = 8;
+  double TotalWin = 9;
+  int32 FreeSpinTime = 10;
+  int32 TotalFreeSpinTime = 11;
+  double TotalFreeSpinScore = 12;
+  int32 TopWilds = 13;
+  int32 TopMultiple = 14;
+  repeated WantedVS WantedVS = 15;
+  string MathVersion = 16;
+}
+
+// ------------------------------------------------------------------------
+// HandOfAnubis
+
+message SpecialSymbol {
+  int32 MeshIndex = 1;
+  int32 SymbolType = 2;
+  int32 Multi = 3;
+}
+
+message WinClearList {
+  int32 Symbol = 1;
+  int32 Count = 2;
+  double Multi = 3;
+  double Score = 4;
+  repeated int32 Mesh = 5;
+}
+
+message HandOfAnubisRole {
+  string RoleId     = 1;
+  int64  ParentId   = 2;
+  int64  SubId  = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  int32 GameState = 7;
+  repeated WinClearList WinClearList = 8;
+  double TotalWin = 9;
+  int32 FreeSpinTime = 10;
+  int32 TotalFreeSpinTime = 11;
+  double TotalFreeSpinScore = 12;
+  repeated SuppleChess StuffMesh = 13;
+  repeated int32 UnderworldMulti = 14;
+  repeated int32 UnderworldActivatedMulti = 15;
+  repeated int32 JudgmentMulti = 16;
+  repeated int32 MultiMesh = 17;
+  repeated SpecialSymbol SpecialSymbols = 18;
+  bool Cascape  = 19;
+  bool IsMultiBlockDropDown = 20;
+  repeated int32 OffsetColList = 21;
+  map<int32,bool> SoulOrbState = 22;
+  string MathVersion = 23;
+  bool           RoundEnd   = 24;
+  HandOfAnubisRole  NextCascadeModel = 25;
+}
+
+// ------------------------------------------------------------------------
+// Dragon Quest
+
+message DragonVS{
+  int32 Multiple1   = 1;
+  int32 Multiple2   = 2;
+  int32 WinMultiple = 3;
+  int32 MeshIndex   = 4;
+}
+
+message DragonEgg {
+  int32 Multiple  = 1;
+  int32 EggType   = 2;
+  int32 MeshIndex = 3;
+}
+
+message DragonRole {
+  string    RoleId      = 1;
+  int64     ParentId    = 2;
+  int64     SubId       = 3;
+  double    Score       = 4;
+  double    Bet         = 5;
+  repeated int32 Mesh   = 6;
+  int32     GameState   = 7;
+  double    TotalWin    = 8;
+  repeated  WinType WinTypes    = 9;
+  int32     FreeSpinTime        = 10;
+  int32     TotalFreeSpinTime   = 11;
+  double    TotalFreeSpinScore  = 12;
+  repeated  DragonVS DragonVS   = 13;
+  repeated int32 ArenaReelMulti = 14;
+  repeated int32 BeastReelMulti = 15;
+  repeated DragonEgg DragonEgg  = 16;
+  repeated int32 BeastReelIsOpen = 17;
+  string MathVersion = 18;
+  bool           RoundEnd   = 19;
+  DragonRole  NextCascadeModel = 20;
+}
+
+// ------------------------------------------------------------------------
+// John Wild
+
+message SwitchData {
+  int32 TargetSymbol              = 1;  // 目标符号
+  int32 SwitchSpinTime            = 2;  //
+  map<int32,int32> ReplacedSymbols= 3;  // 替换符号列表
+  repeated int32 ReplacedMesh     = 4;  // 替换符号mesh
+  int32 LastTargetSymbol          = 5;
+  int32 nRespin                   = 6; // 本次新增次数
+}
+
+message JohnWildRole {
+  string      RoleId      = 1;
+  int64       ParentId    = 2;
+  int64       SubId       = 3;
+  double      Score       = 4;
+  double      Bet         = 5;
+  repeated int32 Mesh     = 6;
+  int32       GameState   = 7;
+  double      TotalWin    = 8;
+  repeated    WinType WinTypes    = 9;
+  int32       FreeSpinTime        = 10;
+  int32       TotalFreeSpinTime   = 11;
+  double      TotalFreeSpinScore  = 12;
+  SwitchData  Switch      = 13;
+  bool        IsReSpin    = 14;
+  bool        StartFree1  = 15;
+  bool        StartFree2  = 16;
+  string      MathVersion = 17;
+  bool        RoundEnd    = 18;
+  JohnWildRole NextCascadeModel   = 19;
+}
+
+// ------------------------------------------------------------------------
+// RipCity
+
+message CatData {
+  int32 Col = 1;
+  repeated int32 MeshIndex = 2;
+  int32 WildMeshIndex = 3;
+  int32 Multiple = 4;
+  int32 isFull = 5;
+}
+
+message RipCityRole {
+  string      RoleId      = 1;
+  int64       ParentId    = 2;
+  int64       SubId       = 3;
+  double      Score       = 4;
+  double      Bet         = 5;
+  repeated int32 Mesh     = 6;
+  int32       GameState   = 7;
+  double      TotalWin    = 8;
+  repeated    WinType WinTypes    = 9;
+  int32       FreeSpinTime        = 10;
+  int32       TotalFreeSpinTime   = 11;
+  double      TotalFreeSpinScore  = 12;
+  repeated int32 Highlight = 14;
+  repeated CatData     CatData = 15;
+  string      MathVersion = 16;
+}
+
+// ------------------------------------------------------------------------
+// Warrior Ways
+
+message WarriorWaysRole {
+  string      RoleId      = 1;
+  int64       ParentId    = 2;
+  int64       SubId       = 3;
+  double      Score       = 4;
+  double      Bet         = 5;
+  repeated int32 Mesh     = 6;
+  int32       GameState   = 7;
+  double      TotalWin    = 8;
+  repeated    WinType WinTypes    = 9;
+  int32       FreeSpinTime        = 10;
+  int32       TotalFreeSpinTime   = 11;
+  double      TotalFreeSpinScore  = 12;
+  VS          VS          = 13;
+  repeated int32 TotalValues  = 14;
+  repeated int32 Values       = 15;
+  int32 Scenario              = 16;
+  int32 MiniSpins             = 17;
+  int32 MiniMuler             = 18;
+  string      MathVersion = 19;
+}
+
+// ------------------------------------------------------------------------
+
+
+// Itero
+
+message EIteroGrid {
+  double      Score         = 1;
+  repeated int32 Mesh       = 2;
+  int32       GameState     = 3;
+  repeated WinLine WinLines = 4;
+  double      Multiple      = 5;
+  double      TotalScore    = 6;
+  int32       FSNum         = 7;
+  int32       FSTotalNum    = 8;
+  double      FSTotalScore  = 9;
+  bool        Cascade       = 10;
+  int32       RSNum         = 11;
+  int32 CollectMultiple     = 12;
+  string MathVersion        = 13;
+  bool   IsRsNum            = 14;
+}
+
+message IteroRole {
+  CommonRole    CR          = 1;
+  int32 CollectMultiple     = 2;
+  string MathVersion        = 3;
+  bool   IsRsNum            = 4;
+  repeated EIteroGrid EIteroGrid = 5;
+}
+
+// ------------------------------------------------------------------------
+// SugarRush
+
+message SugarRushRole {
+  CommonRole     CR         = 1;
+  repeated int32 MultiMesh  = 2;
+  repeated int32 StuffMesh  = 3;
+  repeated int32 ReelsOffset= 4;
+  string         MathVersion= 5;
+  int64          BetCount   = 6;
+  bool           RoundEnd   = 7;
+  SugarRushRole  NextCascadeModel = 8;
+}
+
+// ------------------------------------------------------------------------
+// SweetBonanza
+
+message SweetBonanzaRole {
+  CommonRole     CR         = 1;
+  repeated int32 MeshOffset = 2;
+  repeated int32 MeshStuff  = 3;
+  repeated int32 MeshMulti  = 4;
+  string         MathVersion= 5;
+  bool           RoundEnd   = 6;
+  SweetBonanzaRole  NextCascadeModel = 7;
+}
+
+// ------------------------------------------------------------------------
+// WildGang
+
+message WildGangRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  int32           MisteryTarget = 3;
+  int32           Multiplier = 4;
+  repeated int32  WildMultipliers = 5;
+  repeated int32  WildTimes = 6;
+}
+
+// ------------------------------------------------------------------------
+// >>> GateOfOlympus <<<
+
+message GatesOfOlympusRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  int32           Multiplier = 3;
+  repeated int32  MeshStuff  = 4;
+  repeated int32  MeshOffset = 5;
+  int32           MeshReel = 6;
+  int32           FSMultiType = 7;
+  double          FSWin  = 8;
+  repeated int32  MeshRandCol = 9;
+  int32 FGGameStateBefore = 10;
+  bool RoundEnd = 11;
+  GatesOfOlympusRole NextCascadeModel = 12;
+}
+// ------------------------------------------------------------------------
+// >>> Beautifulgirl <<<
+
+message BeautifulgirlRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  int32           Multiplier = 3;
+  repeated int32  MeshStuff  = 4;
+  repeated int32  MeshOffset = 5;
+  int32           MeshReel = 6;
+  int32           FSMultiType = 7;
+  double          FSWin  = 8;
+  repeated int32  MeshRandCol = 9;
+  int32 FGGameStateBefore = 10;
+  bool RoundEnd = 11;
+  BeautifulgirlRole NextCascadeModel = 12;
+}
+
+// ------------------------------------------------------------------------
+// >>> DogHouse <<<
+
+message DogHouseRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  repeated int32  StickyWilds= 3;
+  int32           SCCount    = 4;
+}
+
+// ------------------------------------------------------------------------
+// MagicalMine
+
+message MagicalMineVS{
+  int32 Multiple1 = 1;
+  int32 Multiple2 = 2;
+  int32 WinMultiple = 3;
+  int32 MeshIndex = 4;
+}
+
+message MagicalMineRole {
+  string RoleId = 1;
+  int64  ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  int32 GameState = 7;
+  repeated WinType WinTypes = 8;
+  double TotalWin = 9;
+  int32 FreeSpinTime = 10;
+  int32 TotalFreeSpinTime = 11;
+  double TotalFreeSpinScore = 12;
+  int32 TopWilds = 13;
+  int32 TopMultiple = 14;
+  repeated MagicalMineVS MagicalMineVS = 15;
+  string    MathVersion   = 16;
+}
+
+// ------------------------------------------------------------------------
+// BigBass
+
+message BigBassMoneyData {
+  int32 Index = 1;
+  float Score = 2;
+  int32 Multiple = 3;
+  bool Activation = 4;
+}
+
+message	BigBassRandColData {
+  int32 Index = 1;
+  int32 Cell = 2;
+}
+
+message BigBassRole {
+  string RoleId = 1;
+  int64  ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  int32 GameState = 7;
+  repeated WinType WinTypes = 8;
+  double TotalWin = 9;
+  int32 RandScatter = 10;
+  repeated BigBassMoneyData MoneyDatas = 11;
+  bool MoneyTriggered = 12;
+  int32 FreeSpinTime = 13;
+  int32 TotalFreeSpinTime = 14;
+  double TotalFreeSpinScore = 15;
+  repeated int32 MoneyMultipleMesh = 16;
+  int32 WildCount = 17;
+  int32 WildTriggeredNum = 18;
+  repeated int32 RandMoneys = 19;
+  repeated int32 RandAllMesh = 20;
+  repeated BigBassRandColData RandColDatas = 21;
+  bool ScatterInMesh = 22;
+  int32 MustWildTime = 23;
+  int32 MustWildCount = 24;
+  int32 FreeSpinStartTime = 25;
+  int32 RandColSpinDirection = 26;
+  int32 RandColSpinCount = 27;
+  int32 LastLayoutsID = 28;
+  repeated int32 LastPositions = 29;
+  int32 WinLineScore = 30;
+  int32 FGWinLineScore = 31;
+  int32 FreeSpinTimeBegin = 32;
+  int32 FGGameStateBefore = 33;
+  string    MathVersion   = 34;
+  bool RoundEnd = 35;
+  BigBassRole NextCascadeModel = 36;
+}
+
+// ------------------------------------------------------------------------
+// >>> ClashCash <<<
+
+message ClashCashCounter {
+  int32 Level = 1;
+  int32 Count = 2;
+  bool Trigger = 3;
+  bool LevelTrigger = 4;
+}
+
+message ClashCashGlovesMul {
+  int32 Index = 1;
+  int32 Multiplier = 2;
+}
+
+message ClashCashGloves {
+  int32 Index = 1;
+  bool Trigger = 2;
+  int32 TotalMultiplier = 3;
+  repeated ClashCashGlovesMul MulData = 4;
+}
+
+message ClashCashRole {
+  CommonRole      CR            = 1;
+  string          MathVersion   = 2;
+  repeated ClashCashGloves GlovesData = 3;
+  repeated ClashCashCounter Counters = 4;
+  int32 FGGameStateBefore = 5;
+}
+
+// ------------------------------------------------------------------------
+// >>> GlodOfOlympus <<<
+
+message GlodOfOlympusRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  int32           Multiplier = 3;
+  repeated int32  MeshStuff  = 4;
+  repeated int32  MeshOffset = 5;
+  int32           MeshReel = 6;
+  int32           FSMultiType = 7;
+  double          FSWin  = 8;
+  repeated int32  MeshRandCol = 9;
+  int32 FGGameStateBefore = 10;
+  bool              RoundEnd = 11;
+  GlodOfOlympusRole NextCascadeModel = 12;
+}
+
+
+
+// ------------------------------------------------------------------------
+// >>> GatesCopyOfOlympus <<<
+
+message GatesCopyOfOlympusRole {
+  CommonRole      CR         = 1;
+  string          MathVersion= 2;
+  int32           Multiplier = 3;
+  repeated int32  MeshStuff  = 4;
+  repeated int32  MeshOffset = 5;
+  int32           MeshReel = 6;
+  int32           FSMultiType = 7;
+  double          FSWin  = 8;
+  repeated int32  MeshRandCol = 9;
+  int32 FGGameStateBefore = 10;
+}
+
+// ------------------------------------------------------------------------
+// SugarCopyRush
+
+message SugarCopyRushRole {
+  CommonRole     CR         = 1;
+  repeated int32 MultiMesh  = 2;
+  repeated int32 StuffMesh  = 3;
+  repeated int32 ReelsOffset= 4;
+  string         MathVersion= 5;
+  int64          BetCount   = 6;
+}
+
+// ------------------------------------------------------------------------
+// JacksCrypt
+
+message JacksCryptVS{
+  int32 Multiple1 = 1;
+  int32 Multiple2 = 2;
+  int32 WinMultiple = 3;
+  int32 MeshIndex = 4;
+}
+
+message JacksCryptRole {
+  string RoleId = 1;
+  int64  ParentId = 2;
+  int64 SubId = 3;
+  double Score = 4;
+  double Bet = 5;
+  repeated int32 Mesh = 6;
+  int32 GameState = 7;
+  repeated WinType WinTypes = 8;
+  double TotalWin = 9;
+  int32 FreeSpinTime = 10;
+  int32 TotalFreeSpinTime = 11;
+  double TotalFreeSpinScore = 12;
+  int32 TopWilds = 13;
+  int32 TopMultiple = 14;
+  repeated JacksCryptVS JacksCryptVS = 15;
+  string MathVersion = 16;
+}
+
+// ------------------------------------------------------------------------
+// >>> ArcanePortals <<<
+message MergeWildData{
+  int32 Index = 1;
+  repeated int32 Target = 2;
+}
+
+message ArcanePortalsRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  repeated int32          MultiMesh               = 3;
+  repeated int32          StuffMesh               = 4;
+  repeated int32          MeshOffset              = 5;
+  int32                   MeshReel                = 6;
+  int32                   ClusterWinningID        = 7;
+  repeated int32          ClusterWild             = 8;
+  repeated int32          WinningMark             = 9;
+  repeated int32          AvalancheMark           = 10;
+  repeated double         MultiplierMark          = 11;
+  int32                   MaxClusterWildsNumber   = 12;
+  repeated int32          PlayAreaWildNew         = 13;
+  repeated int32          PlayAreaWildDelete      = 14;
+  repeated int32          PlayAreaWildJump        = 15;
+  repeated double         WildsMul                = 16;
+  repeated MergeWildData  MergeWildData           = 17;
+  repeated int32          JumpWild                = 18;
+  repeated int32          MeshReelColOffset       = 19;
+  double                  MaxMultiplier           = 20;
+  repeated double         StickyWildMultiplier    = 21;
+  double                  FSWin                   = 22;
+  repeated double         MergeMultiplierMark     = 23;
+  bool                    RoundEnd                = 24;
+  ArcanePortalsRole       NextCascadeModel        = 25;
+}
+
+// ------------------------------------------------------------------------
+// >>> WuKong <<<
+message PlatformFSData {
+  string        OperatorId = 1;
+  int32         CreateTime = 2;
+  bool          IsCancel = 3;
+  double         StartTime = 4;
+  double         EndTime = 5;
+  double        TotalScore = 6;
+  int32         SpinNum = 7;
+  int32         TotalSpinNum = 8;
+  double         Bet = 9;
+  bool          IsTrigger = 10;
+  string        CurrencyCode = 11;
+  string        FreeSpinId = 12;
+}
+
+message DisappearData{
+  int32 Index = 1;
+  int32 Symbol = 2;
+  double Bet = 3;
+  double End = 4;
+}
+
+message EWuKongGrid {
+  double      Score         = 1;
+  repeated int32 Mesh       = 2;
+  int32       GameState     = 3;
+  repeated WinLine WinLines = 4;
+  double      Multiple      = 5;
+  double      TotalScore    = 6;
+  int32       FSNum         = 7;
+  int32       FSTotalNum    = 8;
+  double      FSTotalScore  = 9;
+  bool        Cascade       = 10;
+  repeated int32          MeshOffset          = 11;
+  int32                   MeshReel            = 12;
+  repeated int32          MeshStuff           = 13;
+  repeated int32          GoldenMesh          = 14;
+  int32                   CoinNum             = 15;
+  int32                   PotOfGoldCount      = 16;
+  int32                   FourLeafCount       = 17;
+  repeated int32          CoinTypeGrid        = 18;
+  repeated double         FinalCoinGrid       = 19;
+  repeated double         CoinGrid            = 20;
+  bool                    InDisappear         = 21;
+  repeated DisappearData  Disappear           = 22;
+  repeated int32          Extra               = 23;
+  int32                   LastPotOfGold       = 24;
+  bool                    IsHasRainbowInFree  = 25;
+  bool                    IsNeedRainbowInFree = 26;
+  bool                    ClearGoldenMesh     = 27;
+  repeated int32          NewPotOfGolds       = 28;
+  bool                    RetryFreeCount      = 29;
+}
+
+message WuKongRole {
+  CommonRole              CR                  = 1;
+  string                  MathVersion         = 2;
+  repeated int32          MeshOffset          = 3;
+  int32                   MeshReel            = 4;
+  repeated int32          MeshStuff           = 5;
+  repeated int32          GoldenMesh          = 6;
+  int32                   CoinNum             = 8;
+  int32                   PotOfGoldCount      = 9;
+  int32                   FourLeafCount       = 10;
+  repeated int32          CoinTypeGrid        = 11;
+  repeated double         FinalCoinGrid       = 12;
+  repeated double         CoinGrid            = 13;
+  bool                    InDisappear         = 14;
+  repeated DisappearData  Disappear           = 15;
+  repeated int32          Extra               = 16;
+  int32                   LastPotOfGold       = 17;
+  bool                    IsHasRainbowInFree  = 18;
+  bool                    IsNeedRainbowInFree = 19;
+  bool                    ClearGoldenMesh     = 20;
+  repeated int32          NewPotOfGolds       = 21;
+  bool                    RetryFreeCount      = 22;
+  ActModel                Activity            = 23;
+  repeated PlatformFSData PlatformFS          = 24;
+  repeated EWuKongGrid EWuKongGrid            = 25;
+}
+
+// ------------------------------------------------------------------------
+// >>> JellySlice <<<
+
+message DisruptLine {
+  int32 Col = 1;
+  int32 Row = 2;
+  int32 MIndex = 3;
+  repeated int32 MIndexRange = 4;
+  int32 Mult = 5;
+}
+
+message DropDnSymbol {
+  int32 Col = 1;
+  int32 MIndex = 2;
+  int32 Sym = 3;
+}
+
+message EJellyGrid {
+  repeated int32 Mesh = 1;
+  double Score = 2;
+  double Total = 3;
+  repeated DisruptLine Mults = 4;
+  repeated DropDnSymbol Drops = 5;
+  repeated WinType WinLine = 6;
+  bool Cascape = 7;
+  int32 SymScNum = 8;
+  int32 SpinNum = 9;
+  repeated int32 MeshStuff = 10;
+}
+
+message JellyRole {
+  string      RoleId      = 1;
+  int64       ParentId    = 2;
+  int64       SubId       = 3;
+  double      Score       = 4;
+  double      Bet         = 5;
+  repeated int32 Mesh     = 6;
+  int32       GameState   = 7;
+  double      TotalWin    = 8;
+  repeated    WinType WinTypes    = 9;
+  int32       FreeSpinTime        = 10;
+  int32       TotalFreeSpinTime   = 11;
+  double      TotalFreeSpinScore  = 12;
+  bool Cascape = 13;
+  repeated int32 meshStuff = 14;
+
+  repeated DisruptLine DisruptLine = 15;
+  repeated DropDnSymbol DropDnSymbol = 16;
+  int32 RIndex = 17;
+  repeated int32 Offsets = 18;
+  double EScore = 19;
+  double EFreeScore = 20;
+  repeated EJellyGrid EGrids = 21;
+  string MathVersion = 22;
+}
+
+// ------------------------------------------------------------------------
+// >>> Cashcrew <<<
+
+message ECashcrewGrid {
+  repeated int32 Mesh = 1;
+  repeated int32 MultiMesh = 2;
+  double Score = 3;
+  double Total = 4;
+  repeated WinLine WinLine = 5;
+  int32 SymScNum = 6;
+  int32 FreeSpinTime = 7;
+  repeated WildSurround WildSurround=8;
+  repeated MoneyData MoneyDatas=9;
+  int32 FsAddTimes      =10;
+}
+
+message WildSurround {
+  repeated int32 MeshGold = 1;
+  int32 WildIndex = 2;
+  int32 Multiple = 3;
+}
+
+message MoneyData {
+  int32 Index = 1;
+  int32 MultipleN = 2;
+  int32 Multiple = 3;
+  bool Activation = 4;
+}
+
+message CashcrewRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  repeated int32          MultiMesh               = 3;
+  repeated WildSurround WildSurround=4;
+  repeated MoneyData MoneyDatas=5;
+  int32     FsAddTimes  =6;
+  repeated ECashcrewGrid  EGrids                  = 7;
+  double          EFreeScore               = 8;
+  double          EScore               = 9;
+  repeated bool              LockedWilds = 10;
+  repeated int32              LandedWildCoors = 11;
+  int32              ForcedSC = 12;
+  bool  BetterConfig= 13;
+}
+
+// ------------------------------------------------------------------------
+// >>> GoldenYear <<<
+
+message GoldenYearDisappear {
+  int32                   Index          = 1;
+  int32                   Type           = 2;
+  repeated int32          Mesh           = 3;
+}
+
+message GoldenYearChange {
+  int32                           Parent            = 1;
+  int32                           Type              = 2;
+  repeated int32                  Mesh              = 3;
+  repeated int32                  ReplaceMesh       = 4;
+  int32                           Index             = 5;
+}
+
+message GoldenYearRole {
+  CommonRole                      CR                      = 1;
+  string                          MathVersion             = 2;
+  repeated int32                  MeshOffset              = 3;
+  int32                           MeshReel                = 4;
+  repeated int32                  MeshStuff               = 5;
+  int32                           EyeIndex                = 6;
+  bool                            EyeOpen                 = 7;
+  int32                           CollectedPoint          = 8;
+  int32                           PortalEffect            = 9;
+  bool                            EyeOpenTriggered        = 10;
+  int32                           CollectedPointWin       = 11;
+  repeated GoldenYearDisappear    Disappear               = 12;
+  int32                           CollectedPointNow       = 13;
+  repeated int32                  ActivatedWilds          = 14;
+  repeated GoldenYearChange       Changes                 = 15;
+  int32                           PortalEffectTrigger     = 16;
+  repeated bool                   FS1EyesIndex            = 17;
+  repeated bool                   FS1EyesOpen             = 18;
+  repeated int32                  FS2MegaWild             = 19;
+  bool                            FS2BatterGame           = 20;
+  repeated int32                  EyeBase                 = 21;
+  repeated int32                  FS1EyeBase              = 22;
+  repeated int32                  FS1EyeLast              = 23;
+  bool                            RoundEnd                = 24;
+  GoldenYearRole                  NextCascadeModel        = 25;
+}
+
+// ------------------------------------------------------------------------
+// >>> Chaoscrew <<<
+message ChaoscrewRound {
+  int32                   Id          = 1;
+  repeated double         Record      = 2;
+}
+
+message EChaoscrewGrid {
+  repeated int32 Mesh = 1;
+  repeated int32 MultiMesh = 2;
+  double Score = 3;
+  double Total = 4;
+  repeated WinLine WinLine = 5;
+  ChaoscrewRound          ChaoscrewRound= 6;
+  repeated int32          SumRecord                = 7;
+  repeated int32          Viscouss=8;
+  int32 FreeSpinTime = 9;
+  repeated int32          LastSumRecord                = 10;
+}
+
+
+message ChaoscrewRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  repeated int32          MultiMesh               = 3;
+  repeated int32          StuffMesh               = 4;
+  ChaoscrewRound          ChaoscrewRound          = 5;
+  repeated int32          SumRecord               = 6;
+  repeated int32          Viscouss                = 7;
+  bool                    IsEpicDrop              = 8;
+  double                  FSWin                   = 9;
+  repeated EChaoscrewGrid EGrids                 = 10;
+  repeated int32          LastSumRecord           = 11;
+  bool                    IsOverstep              =12;
+}
+
+
+// ------------------------------------------------------------------------
+// >>> Keepem <<<
+message KeepEmStartEnd {
+  int32 Start = 1;
+  int32  End = 2;
+}
+
+message KeepEmViscous {
+  int32 Start = 1;
+  int32  End = 2;
+  bool   First = 3;
+  int32  Symbol = 4;
+  int32  Multi = 5;
+}
+
+message KeepEmSuperCol {
+  repeated int32 Cols = 1;
+  repeated int32 NormalCols = 2;
+  KeepEmStartEnd Expanse = 3;
+}
+
+message KeepEmBoost {
+    int32 Index = 1;
+    int32  Mul = 2;
+    repeated int32  AffectIndex = 3;
+}
+
+message KeepEmMoney {
+  int32 Index = 1;
+  int32  Symbol = 2;
+}
+
+message KeepEmRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  int32                   CascadeNum              = 3;
+  int32                   CascadeIndex            = 4;
+  int32                   CascadeLastNum          = 5;
+  repeated KeepEmViscous Viscous                  = 6;
+  int32                   MulNum                  = 7;
+  int32                   MulCurrentNum           = 8;
+  KeepEmSuperCol SuperCol                         = 9;
+  repeated KeepEmBoost    Boost                   = 10;
+  int32                   ModeSource              = 11;
+  double                  SessionScore            = 12;
+  double                  RoundScore              = 13;
+  bool                    RoundCollectSet         = 14;
+  bool                    RoundMoneySet           = 15;
+  bool                    RoundBoostSet           = 16;
+  map<int32, int32>       MoneyMulSave            = 17;
+  map<int32, bool>        ViscousBottom           = 18;
+  repeated KeepEmRole     Future                  = 19;
+  bool                    NewPlayer               = 20;
+  int32                   Rtp                     = 21;
+  bool                    IsRealNewPlayer         = 22;
+  repeated int32          RhinoOption             = 23;
+  double                  LastBet                 = 24;
+  repeated NewActivity    Activities              = 25;
+  int32                   MoneyMulti              = 26;
+
+}
+// ------------------------------------------------------------------------
+// >>> Venom <<<
+message VenomWildData {
+  bool IsFirst = 1;
+  int32 NowIndex = 2;
+  int32 nextIndex = 3;
+  int32 cover = 4;
+}
+
+message SCExpanseCol {
+  int32 Col = 1;
+  repeated int32 Index = 2;
+
+}
+message VenomRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  int32                   ModeSource              = 3;
+  repeated VenomWildData  WildList                = 4;
+  int32                   SCSelect                = 5;
+  repeated SCExpanseCol   SCExpanseCols           = 6;
+  double                  SCExpanseScore          = 7;
+  int32                   SCCount                 = 8;
+  repeated int32          BaseMesh                = 9;
+  double                  WildTotalScore          = 10;
+  double                  SessionScore            = 11;
+  message Mesh {
+    repeated int32  mesh = 1;
+  }
+  repeated  Mesh          FutureMesh              = 12;
+  message WL {
+    repeated VenomWildData  WildList = 1;
+  }
+  repeated WL             FutureWildList          = 13;
+  double                  RoundScore              = 14;
+  bool                    NewPlayer               = 15;
+  bool                    Activity                = 16;
+  repeated NewActivity    Activities              = 17;
+  int32                   RespinSource            = 18;
+}
+
+// ------------------------------------------------------------------------
+// >>> Razorshark <<<
+message EyeData {
+  int32                   Index          = 1;
+  int32                   Multiple       = 2;
+}
+
+message NewActivity {
+  int64   Id        = 1;
+  string  Name      = 2;
+  int64  StartTime = 3;
+  int64  EndTime   = 4;
+  int64 TotalEndTime = 5;
+  int64 TotalSpinNum = 6;
+  int64 SpinNum = 7;
+  double TotalScore = 8;
+  double Bet = 9;
+  int64 Type = 10;
+  int64 Status = 11;
+}
+
+message RazorsharkRole {
+  CommonRole              CR                      = 1;
+  string                  MathVersion             = 2;
+  repeated int32          MultiMesh               = 3;
+  double                  FSWin                   = 4;
+  repeated int32          StopIndex               = 5;
+  repeated int32          ReelSetIndex            = 6;
+  repeated bool           HasSeaWeed              = 7;
+  repeated int32          SeaweedStatus           = 8;
+  int32                   RoundMaxMine            = 9;
+  bool                    Continued               = 10;
+  int32                   MineCount               = 11;
+  repeated int32          RefreshList             = 12;
+  repeated int32          RefreshRoll             = 13;
+  repeated EyeData        EyesData                = 14;
+  int32                   RefreshBack             = 15;
+  repeated int32          NgStopIndex             = 16;
+  repeated int32          NgReelSetIndex          = 17;
+  repeated bool           NgHasSeaWeed            = 18;
+  repeated int32          NgRefreshList           = 19;
+  repeated int32          NgRefreshRoll           = 20;
+  repeated int32          NgMesh                  = 21;
+  repeated int32          BeforeFreeMesh          = 22;
+  int32                   NgExpectScNum           = 23;
+  int32                   NgExpectTotalNum        = 24;
+  int32                   FrontBack               = 25;
+  bool                    UseBet                  = 26;
+  repeated RazorsharkRole RazorsharkBetRole       = 27;
+  bool                    NewPlayer               = 28;
+  bool                    BonusStatus             = 29;
+  repeated NewActivity NewActivity = 30;
+}
+
+// ------------------------------------------------------------------------
+// >>> Activity <<<
+message ActInnerModel {
+  bool    IsTrig    = 1;
+  string  Type      = 2;
+  int32   Key       = 3;
+  int32   State     = 4;
+  int32   Start     = 5;
+  int32   End       = 6;
+  double  Score     = 7;
+  double  Bet       = 8;
+  int32   Level     = 9;
+  int32   TotalEnd  = 10;
+}
+
+message FreeSpinActItem {
+  int32 State   = 1;
+  int32 Key     = 2;
+  int32 Start   = 3;
+  int32 End     = 4;
+  int32 Index   = 5;
+  int32 SpinNum = 6;
+  int32 Bindex  = 7;
+}
+
+message FreeSpinExt {
+  int32     SpinNum = 1;
+  int32     Index   = 2;
+  int32     Bindex  = 3;
+  repeated	FreeSpinActItem List = 4;
+}
+
+message RankActItem {
+  int32 State = 1;
+  int32 Key   = 2;
+  int32 Start = 3;
+  int32 End   = 4;
+}
+
+message RankExt {
+  repeated  RankActItem   List  = 1;
+  int32     Level               = 2;
+  bool      NotBet              = 3;
+  bool      RedDot              = 4;
+  bool      ShowIcon            = 5;
+  double    Bet                 = 6;
+}
+
+message ActModel {
+  bool            Leftover  = 1;
+  double          Bonuses   = 2;
+  ActInnerModel   Act       = 3;
+  FreeSpinExt     FsExtend  = 4;
+  RankExt         RankExt   = 5;
+}
+
+message StandardRes {
+  int32      Code      = 1;
+  string     Message   = 2;
+}
+
+message Multi {
+  repeated int32 Symbols = 1;
+}
+
+message ColMultiIndex {
+  bool HasMulti = 1;
+  int32 Count = 2;
+  int32 RowIndex = 3;
+}
+
+message NeZhaRole {
+  CommonRole              CR                  = 1;
+  string                  MathVersion         = 2;
+  int32 CascadeWinCount = 3;
+  bool NewPlayer = 4;
+  string Chess = 5;
+  repeated NewActivity NewActivity = 6;
+  bool RoundEnd = 7;
+  NeZhaRole NextCascadeModel = 8;
+  bool IsRealNewPlayer = 9;
+}
